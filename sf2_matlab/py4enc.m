@@ -1,55 +1,37 @@
-load lighthouse.mat;
-
 %% Work out matrix of 128
 offset = 128 * ones(size(X));
 
 %% First part, generating X1 and Y0
 h = 0.25*[1 2 1];
+%quantise_steps = 17;
 
-%%First round
+% Generate cell
+num_steps = 3;
+X_cell = cell(num_steps+1,1);
+X_cell_q = cell(num_steps+1, 1);
+Y_cell = cell(num_steps,1);
+Y_cell_q = cell(num_steps+1, 1);
+
+% First cell with mean = 0
+X_cell{1} = X - 128;
+X_cell_q{1} = quantise(X_cell{1}, quantise_steps);
+
+%% For loop
+
+for i=2:1:num_steps+1
+    
 %Decimate image
-X = X - 128;
-X1 = rowdec(X, h);X1 = X1';
-X1 = rowdec(X1,h); X1 = X1';
+X_cell{i} = rowdec(X_cell{i-1}, h);X_cell{i} = X_cell{i}';
+X_cell{i} = rowdec(X_cell{i}, h); X_cell{i} = X_cell{i}';
+X_cell_q{i} = quantise(X_cell{i}, quantise_steps);
 
 %Interpolate image;
-X1_1 = rowint(X1, 2*h);X1_1 = X1_1';
-X1_1 = rowint(X1_1, 2*h); X1_1 = X1_1';
+temp = rowint(X_cell{i}, 2*h);temp = temp';
+temp = rowint(temp, 2*h); temp = temp';
 
-Y0 = X - X1_1;
+Y_cell{i-1} = X_cell{i-1} - temp;
+Y_cell_q{i-1} = quantise(Y_cell{i-1}, quantise_steps);
+end
 
-%%Second round
-%Decimate image
-X2 = rowdec(X1, h); X2 = X2';
-X2 = rowdec(X2, h); X2 = X2';
-
-%Interpolate image
-X2_1 = rowint(X2, 2*h); X2_1 = X2_1';
-X2_1 = rowint(X2_1, 2*h); X2_1 = X2_1';
-
-Y1 = X1 - X2_1;
-
-%%Third round
-%Decimate image
-X3 = rowdec(X2, h); X3 = X3';
-X3 = rowdec(X3, h); X3 = X3';
-
-%Interpolate image
-X3_1 = rowint(X3, 2*h); X3_1 = X3_1';
-X3_1 = rowint(X3_1, 2*h); X3_1 = X3_1';
-
-Y2 = X2 - X3_1;
-
-%%Four round
-%Decimate image
-X4 = rowdec(X3, h); X4 = X4';
-X4 = rowdec(X4, h); X4 = X4';
-
-%Interpolate image
-X4_1 = rowint(X4, 2*h); X4_1 = X4_1';
-X4_1 = rowint(X4_1, 2*h); X4_1 = X4_1';
-
-Y3 = X3 - X4_1;
-
-
-draw(beside(Y0,beside(Y1,beside(Y2,beside(Y3,X4)))));
+%draw_cell(Y_cell_q);
+%draw(beside(Y_cell{1},beside(Y_cell{2},beside(Y_cell{3}, beside(Y_cell{4}, Y_cell{5})))));

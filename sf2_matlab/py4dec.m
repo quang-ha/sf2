@@ -1,44 +1,27 @@
-load lighthouse.mat;
-
-%% Work out matrix of 128
-offset = 128 * ones(size(X4));
-
 %% First part, generating X1 and Y0
 h = 0.25*[1 2 1];
-X4_1 = X4;% + offset;
 
-%%First round
-%Interpolate image = X4 + 2*offset;
-X4_2 = rowint(X4_1, 2*h);X4_2 = X4_2';
-X4_2 = rowint(X4_2,2*h); X4_2 = X4_2';
+% Generate cell
+num_steps = 8;
+Z_cell = cell(num_steps, 1);
 
-%Add high pass image
-Z3 = X4_2 + Y3;
+% First cell
+Z_cell{num_steps} = rowint(X_cell{num_steps+1}, 2*h);
+Z_cell{num_steps} = rowint(Z_cell{num_steps}', 2*h); Z_cell{num_steps} = Z_cell{num_steps}';
 
-%%Second round
-%Interpolate image
-Z3_2 = rowint(Z3, 2*h); Z3_2 = Z3_2';
-Z3_2 = rowint(Z3_2, 2*h); Z3_2 = Z3_2';
+Z_cell{num_steps} = Z_cell{num_steps} + Y_cell{num_steps};
 
-%Add high pass image
-Z2 = Z3_2 + Y2;
+%% For loop
 
+for i=num_steps-1:-1:1
+    
+%Decimate image
+Z_cell{i} = rowint(Z_cell{i}, 2*h);
+Z_cell{i} = rowint(Z_cell{i}', 2*h); Z_cell{i} = Z_cell{i}';
 
-%%Third round
-%Interpolate image
-Z2_2 = rowint(Z2, 2*h); Z2_2 = Z2_2';
-Z2_2 = rowint(Z2_2, 2*h); Z2_2 = Z2_2';
+Z_cell{i} = Z_cell{i} + Y_cell{i};
 
-%Add high pass image
-Z1 = Z2_2 + Y1;
+end
 
-%%Fourth round
-%Interpolate image
-Z1_2 = rowint(Z1, 2*h); Z1_2 = Z1_2';
-Z1_2 = rowint(Z1_2, 2*h); Z1_2 = Z1_2';
-
-%Add high pass image
-Z0 = Z1_2 + Y0;
-
-
-draw(beside(Z0,beside(Z1,beside(Z2,beside(Z3,Y3)))));
+draw_cell(Z_cell);
+max(abs(X_cell{1}(:) - Z_cell{1}(:)))

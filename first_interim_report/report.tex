@@ -1,0 +1,79 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top = 1.2in, bottom = 1.2in, left = 0.6in, right = 0.6in]{geometry}
+\usepackage{amsmath}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage[labelfont=bf]{caption}
+
+\begin{document}
+
+%%Title
+\Large
+\begin{center}
+\hrulefill \\
+\textbf{IMAGE PROCESSING} \\
+SF2 - FIRST INTERIM REPORT \\
+\vspace{0.2cm}
+\normalsize 
+Quang-Thinh Ha - CRSid: qth20 \\
+\hrulefill \\
+\end{center}
+
+\normalsize
+
+\section{Introduction}
+
+This project aims at developing an algorithm for image compression, while preserving the quality of the decompressed image at an acceptable level. \\
+\noindent
+The first week aims at delivering basic foundation techniques, including \textit{image filtering}, building \textit{Laplacian Pyramid} and \textit{quantisation}. The observations on these particular areas are mentioned on this first interim report. 
+
+\section{Simple Image Filtering}
+An effective image low-pass filter, of \textit{odd} length $\mathit{N}$, ma be ontained by defining the impulse response $\mathit{h(n)}$ to be a sampled half-cosine pulse:
+
+\begin{equation*}
+\mathit{h(n) = G cos \big( \frac{n \pi}{N+1} \big)} \, \, \, \mathrm{for} \mathit{\frac{-(N-1)}{2} \leq n \leq \frac{N-1}{2}}
+\end{equation*}
+\noindent
+and for unity gain at zero frequency, the gain factor \textit{G} should be calculated that:
+\begin{equation*}
+\sum\limits_{n=-(N-1)/2)}^{(N-1)/2} h(n) = 1
+\end{equation*}
+\noindent
+It is deduced that the larger the value of \textit{N}, the wider the half-cosine pulse would be. When convolving a wider half-cosine, the image should be stretched more in the direction of the convolving (i.e. horizontal or vertical). This results in blurrier images as N increase, which is demonstrated by Figure 1 in the Appendix. \\
+\noindent
+As an images with finite size, the edges of the image is represented with high frequency components (just like a 'sharp' step signal). In order to minimise the edge effects, a technique called \textit{symmetric extension} is applied, in which it is assumed that there are flat mirror along each edge of the image. The filtered image will also be symmetrically extended in all directions with the same period as the original images. \\
+\noindent
+Due to this property of symmetry, there should not be any differences whether the rows or columns are filtered first. However, the maximum absolute pixel difference between row-column and column-row filtered images, obtained from MATLAB, is $\mathbf{1.1369\times10^{-13}}$. This is insignificant, and the presence of this tiny numerical error can be explained due to the discretisation of the convolving process in MATLAB. 
+\section{Laplacian Pyramid}
+
+\section{Quantisation and Coding Efficiency}
+
+\section{Conclusion}
+
+%\begin{figure}[h]
+%        \centering
+%        \begin{subfigure}[b]{0.3\textwidth}
+%                \includegraphics[width=\textwidth]{pmma_1.JPG}
+%                \caption{4mm}
+%        \end{subfigure}%
+%        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+%          %(or a blank line to force the subfigure onto a new line)
+%        \begin{subfigure}[b]{0.3\textwidth}
+%                \includegraphics[width=\textwidth]{pmma_2.JPG}
+%                \caption{8mm}
+%        \end{subfigure}
+%        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+%          %(or a blank line to force the subfigure onto a new line)
+%        \begin{subfigure}[b]{0.3\textwidth}
+%                \includegraphics[width=\textwidth]{pmma_3.JPG}
+%                \caption{14mm}
+%        \end{subfigure}
+%        \caption{Fracture Surface of PMMA at different initial crack lengths.}\label{fig:ex_1_1}
+%\end{figure}
+
+
+\end{document}
