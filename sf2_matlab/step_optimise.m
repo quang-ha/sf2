@@ -1,5 +1,5 @@
 min_error = 10;
-for i=9.5:0.01:15.0
+for i=5.0:0.01:20.0
     quantise_steps = i;
     py4enc;
     py4dec_q;

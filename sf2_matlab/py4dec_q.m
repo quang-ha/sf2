@@ -1,5 +1,4 @@
 %% First part, generating X1 and Y0
-h = 0.25*[1 2 1];
 
 % Generate cell
 Z_cell_q = cell(num_steps, 1);
