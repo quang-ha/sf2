@@ -45,15 +45,23 @@ if (nargin<6)
   end
 end
  if ((opthuff==true) && (nargout==1)) error('Must output bits and huffval if optimising huffman tables'); end
- 
-% DCT on input image X.
-fprintf(1, 'Forward %i x %i DCT\n', N, N);
-C8=dct_ii(N);
-Y=colxfm(colxfm(X,C8)',C8)'; 
 
-% Quantise to integers.
-fprintf(1, 'Quantising to step size of %i\n', qstep); 
-Yq=quant1(Y,qstep,qstep);
+%% This entire code can be replaced by DWT + quantise
+% DCT on input image X.
+% fprintf(1, 'Forward %i x %i DCT\n', N, N);
+% C8=dct_ii(N);
+% Y=colxfm(colxfm(X,C8)',C8)'; 
+% 
+% % Quantise to integers.
+% fprintf(1, 'Quantising to step size of %i\n', qstep); 
+% Yq=quant1(Y,qstep,qstep);
+%% This entire code can be replaced by DWT + quantise
+
+% nlevdwt on input image X
+%X = X - 128;
+Y = nlevdwt(X, 3); % performing n level of dwt on image X
+Yqug = quant1dwt(Y, qstep, 3); % quantising the image X based on MSE
+Yq = dwtgroup(Yqug, (log(N)/log(2)));
 
 % Generate zig-zag scan of AC coefs.
 scan = diagscan(M);

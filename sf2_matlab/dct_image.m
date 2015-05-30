@@ -1,4 +1,4 @@
-function [Q, image] = dct_image(X, N, q)
+function [Q, image] = dct_image(X, q, ratio, N)
 %% X - original image with removed offset
 %% N - dct_ii(N)
 %% q - 1 for quantise, 0 for non-quantise.
@@ -6,9 +6,9 @@ function [Q, image] = dct_image(X, N, q)
 C = dct_ii(N);
 Q = colxfm(colxfm(X, C)', C)';
 if q ~= 0
-    Q = quantise(Q, q);
+    Q = quantise(Q, q, q*ratio);
 end
 
-image = regroup(Q,N)/N;
+image = regroup(Q,N);
 
 return

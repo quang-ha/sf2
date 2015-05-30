@@ -1,10 +1,12 @@
+function [min, save] = dct_optimise(X, N)
+
 Xq = quantise(X, 17);
 ref_std = std(X(:) - Xq(:));
 
 min = 10;
 save = 17;
 
-for q = 15:0.01:25
+for q = 15:0.01:30
     [Yq, Yr] = dct_image(X, N, q);
     Zq = dct_constr(Yq, N);
     
@@ -17,5 +19,4 @@ for q = 15:0.01:25
     
 end
 
-min
-save
+return

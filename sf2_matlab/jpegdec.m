@@ -123,11 +123,20 @@ for r=0:M:(H-M),
   end
 end
 
+% To invert from 2-column arrays back into a matrix. 
 fprintf(1, 'Inverse quantising to step size of %i\n', qstep);
-Zi=quant2(Zq,qstep,qstep);
 
-fprintf(1, 'Inverse %i x %i DCT\n', N, N);
-C8=dct_ii(N);
-Z=colxfm(colxfm(Zi',C8')',C8');
+
+%Zi=quant2(Zq,qstep,qstep);
+Zi = quant2dwt(Zq, qstep, 3);
+Zug = dwtgroup(Zi, -log(N)/log(2));
+Z = nlevidwt(Zug, 3);
+
+%% To be replaced by inverting with DWT
+% % Inverting back to the original image
+% fprintf(1, 'Inverse %i x %i DCT\n', N, N);
+% 
+% C8=dct_ii(N);
+% Z=colxfm(colxfm(Zi',C8')',C8');
 
 return
